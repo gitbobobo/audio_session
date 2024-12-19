@@ -12,9 +12,10 @@ static NSHashTable<DarwinAudioSession *> *sessions = nil;
     self = [super init];
     NSAssert(self, @"super init cannot be nil");
     BOOL firstInstance = !sessions;
-    if (firstInstance) {
-        sessions = [NSHashTable weakObjectsHashTable];
+    if (!firstInstance) {
+        [sessions removeAllObjects];
     }
+    sessions = [NSHashTable weakObjectsHashTable];
     [sessions addObject:self];
     _registrar = registrar;
     _channel = [FlutterMethodChannel
@@ -24,7 +25,7 @@ static NSHashTable<DarwinAudioSession *> *sessions = nil;
     [_channel setMethodCallHandler:^(FlutterMethodCall* call, FlutterResult result) {
         [weakSelf handleMethodCall:call result:result];
     }];
-    if (firstInstance) {
+    // if (firstInstance) {
         //NSLog(@"adding notification observers");
         [AVAudioSession sharedInstance];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(audioInterrupt:) name:AVAudioSessionInterruptionNotification object:nil];
@@ -32,7 +33,7 @@ static NSHashTable<DarwinAudioSession *> *sessions = nil;
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(silenceSecondaryAudio:) name:AVAudioSessionSilenceSecondaryAudioHintNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaServicesLost:) name:AVAudioSessionMediaServicesWereLostNotification object:nil];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(mediaServicesReset:) name:AVAudioSessionMediaServicesWereResetNotification object:nil];
-    }
+    // }
     return self;
 }
 
