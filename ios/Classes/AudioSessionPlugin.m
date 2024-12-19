@@ -10,9 +10,9 @@ static NSHashTable<AudioSessionPlugin *> *plugins = nil;
 }
 
 + (void)registerWithRegistrar:(NSObject<FlutterPluginRegistrar>*)registrar {
-    if (!plugins) {
+    // if (!plugins) {
         plugins = [NSHashTable weakObjectsHashTable];
-    }
+    // }
     AudioSessionPlugin *plugin = [[AudioSessionPlugin alloc] initWithRegistrar:registrar];
     [plugins addObject:plugin];
 }
